@@ -1,12 +1,20 @@
 import React from "react"
 import { StyleSheet, Text, View } from "react-native"
 import Expo, { AppLoading } from "expo"
-import { NativeRouter, Route, Link } from "react-router-native"
-import * as firebase from "firebase"
+import {
+  NativeRouter,
+  AndroidBackButton,
+  Route,
+  Link,
+  Switch
+} from "react-router-native"
+// import * as firebase from "firebase"
 
 import firebaseConfig from "./config/firebaseConfig"
-import Login from "./src/loginScreen/login"
-import GroupsList from "./src/myGroupsScreen/groupsList"
+import PrivateRoute from "./src/privateRoute"
+import Login from "./src/loginScreen"
+import Signup from "./src/signupScreen"
+import Home from "./src/home"
 
 // const firebaseApp = firebase.initializeApp(firebaseConfig)
 
@@ -28,16 +36,15 @@ export default class App extends React.Component {
     if (this.state.isReady) {
       return (
         <NativeRouter>
-          <View style={styles.container}>
-            <Link to="/login">
-              <Text> Ir al login </Text>
-            </Link>
-            <Link to="/myGroups">
-              <Text> Lista de grupos </Text>
-            </Link>
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/myGroups" component={GroupsList} />
-          </View>
+          <AndroidBackButton>
+            <View style={styles.container}>
+              <Switch>
+                <Route path="/" component={Login} />
+                <Route path="/signup" component={Signup} />
+                <PrivateRoute path="/home" component={Home} />
+              </Switch>
+            </View>
+          </AndroidBackButton>
         </NativeRouter>
       )
     } else {
