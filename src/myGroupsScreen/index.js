@@ -13,6 +13,7 @@ import { FontAwesome } from "@expo/vector-icons"
 
 const fakeGroupsList = [
   {
+    key: 1,
     name: "Matematicoss UTP",
     subject: "Matematicas",
     meetingPlace: "UTP",
@@ -20,6 +21,7 @@ const fakeGroupsList = [
     members: 10
   },
   {
+    key: 2,
     name: "Lectura clasica",
     subject: "Literatura",
     meetingPlace: "Universidad Nacional",
@@ -27,6 +29,7 @@ const fakeGroupsList = [
     members: 10
   },
   {
+    key: 3,
     name: "Física UTP",
     subject: "Física",
     meetingPlace: "UTP",
@@ -37,13 +40,16 @@ const fakeGroupsList = [
 ]
 
 export default class GroupsList extends React.Component {
+  componentDidMount() {
+    console.warn("home mounted")
+  }
   render() {
     return (
       <Container>
         <FlatList
           data={fakeGroupsList}
           renderItem={({ item }) => (
-            <Card>
+            <Card style={{ marginHorizontal: 20 }}>
               <CardItem header>
                 <Text>{item.name}</Text>
               </CardItem>
