@@ -8,11 +8,12 @@ import {
   Link,
   Switch
 } from "react-router-native"
-// import * as firebase from "firebase"
 
 import firebaseConfig from "./config/firebaseConfig"
 import PrivateRoute from "./src/privateRoute"
+import Authentication from "./src/authentication"
 import Login from "./src/loginScreen"
+import Logout from "./src/logout"
 import Signup from "./src/signupScreen"
 import Home from "./src/home"
 
@@ -38,10 +39,16 @@ export default class App extends React.Component {
         <NativeRouter>
           <AndroidBackButton>
             <View style={styles.container}>
+              <Link to="/logout">
+                <Text>Logout!!</Text>
+              </Link>
               <Switch>
-                <Route path="/" component={Login} />
-                <Route path="/signup" component={Signup} />
-                <PrivateRoute path="/home" component={Home} />
+                <Route exact path="/" component={Authentication} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/logout" component={Logout} />
+                <Route exact path="/signup" component={Signup} />
+                {/* <PrivateRoute exact path="/home" component={Home} /> */}
+                <Route exact path="/home" component={Home} />
               </Switch>
             </View>
           </AndroidBackButton>

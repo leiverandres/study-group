@@ -10,13 +10,25 @@ import {
   Text,
   Label
 } from "native-base"
+import { Redirect } from "react-router-native"
 
 import firebaseInstance from "../firebase"
 
 export default class Login extends React.Component {
   state = {
     email: "",
-    password: ""
+    password: "",
+    shouldRedirect: false
+  }
+
+  componentWillMount() {
+    firebaseInstance.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({ shouldRedirect: true })
+      } else {
+        console.warn("User is loged out")
+      }
+    })
   }
 
   handleChange = fieldName => {
@@ -39,7 +51,11 @@ export default class Login extends React.Component {
       })
   }
   render() {
-    const { email, password } = this.state
+    const { email, password, shouldRedirect } = this.state
+    if (shouldRedirect) {
+      return <Redirect to="/home" />
+    }
+
     return (
       <Container style={{ paddingTop: 50, alignItems: "center" }}>
         <Content>

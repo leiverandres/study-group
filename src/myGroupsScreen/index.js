@@ -40,9 +40,7 @@ const fakeGroupsList = [
 ]
 
 export default class GroupsList extends React.Component {
-  componentDidMount() {
-    console.warn("home mounted")
-  }
+  componentDidMount() {}
   render() {
     return (
       <Container>

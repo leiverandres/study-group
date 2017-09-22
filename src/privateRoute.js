@@ -1,7 +1,7 @@
 import React from "react"
 import { Route, Redirect } from "react-router-native"
 
-const isAuthenticated = false
+const isAuthenticated = true
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
