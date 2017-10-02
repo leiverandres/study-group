@@ -8,9 +8,10 @@ import {
   Content,
   Button,
   Text,
-  Label
+  Label,
+  Spinner
 } from "native-base"
-import { Redirect } from "react-router-native"
+import { Redirect, Link } from "react-router-native"
 
 import firebaseInstance from "../firebase"
 
@@ -18,6 +19,7 @@ export default class Login extends React.Component {
   state = {
     email: "",
     password: "",
+    loading: false,
     shouldRedirect: false
   }
 
@@ -25,9 +27,8 @@ export default class Login extends React.Component {
     firebaseInstance.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ shouldRedirect: true })
-      } else {
-        console.warn("User is loged out")
       }
+      // User is logged out so do nothing
     })
   }
 
@@ -38,58 +39,66 @@ export default class Login extends React.Component {
   }
 
   handleLogin = () => {
-    console.warn("trying to login", this.state)
+    this.setState({ loading: true })
     const { email, password } = this.state
     firebaseInstance
       .auth()
-      .signInWithEmailAndPassword(email, password)
-      .catch(function(error) {
+      .signInWithEmailAndPassword(email, password).then(usr => {
+        this.setState({ loading: false })
+      })
+      .catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code
         var errorMessage = error.message
         console.warn(`Error: ${errorCode}: ${errorMessage}`)
+        this.setState({ loading: false })
       })
   }
   render() {
-    const { email, password, shouldRedirect } = this.state
+    const { email, password, shouldRedirect, loading } = this.state
     if (shouldRedirect) {
       return <Redirect to="/home" />
     }
 
     return (
-      <Container style={{ paddingTop: 50, alignItems: "center" }}>
-        <Content>
-          <Form>
-            <Item floatingLabel>
-              <Label>Correo electrónico</Label>
-              <Input onChangeText={this.handleChange("email")} value={email} />
-            </Item>
-            <Item floatingLabel>
-              <Label>Contraseña</Label>
-              <Input
-                onChangeText={this.handleChange("password")}
-                value={password}
-                secureTextEntry
-              />
-            </Item>
-          </Form>
-          <View style={{ alignSelf: "center", paddingTop: 50 }}>
-            <Button onPress={this.handleLogin}>
-              <Text>Entrar</Text>
-            </Button>
-          </View>
-          <Text style={{ paddingTop: 50 }}>¿No tienes cuenta? Registrate!</Text>
+      <Container style={{ paddingTop: 50 }}>
+        <Content style={styles.content}>
+          {loading ? <Spinner /> : <View >
+            <Form>
+              <Item floatingLabel >
+                <Label>Correo electrónico</Label>
+                <Input onChangeText={this.handleChange("email")} value={email} />
+              </Item>
+              <Item floatingLabel >
+                <Label>Contraseña</Label>
+                <Input
+                  onChangeText={this.handleChange("password")}
+                  value={password}
+                  secureTextEntry
+                />
+              </Item>
+            </Form>
+            <View style={styles.loginButton}>
+              <Button onPress={this.handleLogin}>
+                <Text>Entrar</Text>
+              </Button>
+            </View>
+            <View style={styles.message}>
+              <Text>¿No tienes cuenta?</Text>
+              <Link to="/signup">
+                <Text style={{ color: 'teal' }}> Registrate!</Text>
+              </Link>
+            </View>
+          </View>}
+
         </Content>
-      </Container>
+      </Container >
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
+  content: { minWidth: 250, flexDirection: 'column' },
+  loginButton: { alignSelf: "center", padding: 50 },
+  message: { flexDirection: 'row', justifyContent: 'center' }
 })
