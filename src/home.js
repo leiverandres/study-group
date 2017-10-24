@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Container,
   Tab,
@@ -9,11 +9,13 @@ import {
   Right,
   Drawer,
   Icon
-} from "native-base";
+} from 'native-base';
+import { Route } from 'react-router-native';
 
-import SideBar from "./sidebar";
-import MyGroups from "./myGroupsScreen";
-import Explore from "./exploreScreen";
+import SideBar from './sidebar';
+import MyGroups from './myGroupsScreen';
+import Explore from './exploreScreen';
+import AddGroupScreen from './addGroupScreen';
 
 export default class Home extends Component {
   closeDrawer = () => {
@@ -48,13 +50,13 @@ export default class Home extends Component {
                 ios="ios-search"
                 android="md-search"
                 style={{ fontSize: 35, width: 30 }}
-                onPress={() => console.warn("Search box should be open")}
+                onPress={() => console.warn('Search box should be open')}
               />
             </Right>
           </Header>
-          <Tabs initialPage={1}>
+          <Tabs initialPage={0}>
             <Tab heading="Mis Grupos">
-              <MyGroups />
+              <MyGroups url={this.props.match.url} />
             </Tab>
             <Tab heading="Explorar">
               <Explore />

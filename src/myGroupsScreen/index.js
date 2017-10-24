@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import {
   Container,
   List,
@@ -6,10 +6,13 @@ import {
   Card,
   CardItem,
   Text,
-  Body
-} from "native-base"
-import { FlatList } from "react-native"
-import { FontAwesome } from "@expo/vector-icons"
+  Body,
+  Button,
+  Icon
+} from "native-base";
+import { FlatList } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
+import { Link } from "react-router-native";
 
 const fakeGroupsList = [
   {
@@ -37,14 +40,31 @@ const fakeGroupsList = [
       "Fisica cuantica cada martes y jueves de 4 a 6 pm, en la biblioteca ROA",
     members: 10
   }
-]
+];
 
 export default class GroupsList extends React.Component {
-  componentDidMount() {}
+  state = {
+    showAddButton: true
+  };
   render() {
     return (
       <Container>
+        {this.state.showAddButton && (
+          <Link to="/add-group">
+            <Button
+              bordered
+              iconRight
+              info
+              style={{ marginVertical: 20, alignSelf: "center" }}
+            >
+              <Text>Añadir grupo</Text>
+              <Icon ios="ios-add" android="md-add" name="md-add" />
+            </Button>
+          </Link>
+        )}
         <FlatList
+          onTouchStart={() => this.setState({ showAddButton: true })}
+          onScroll={() => this.setState({ showAddButton: false })}
           data={fakeGroupsList}
           renderItem={({ item }) => (
             <Card style={{ marginHorizontal: 20 }}>
@@ -66,6 +86,6 @@ export default class GroupsList extends React.Component {
           )}
         />
       </Container>
-    )
+    );
   }
 }
