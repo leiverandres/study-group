@@ -25,7 +25,7 @@ export default class Signup extends Component {
     shouldRedirect: false
   };
 
-  componentWillMount() {
+  componentDidMount() {
     firebaseInstance.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ shouldRedirect: true });

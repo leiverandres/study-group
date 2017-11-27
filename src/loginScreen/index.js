@@ -9,7 +9,8 @@ import {
   Button,
   Text,
   Label,
-  Spinner
+  Spinner,
+  Toast
 } from 'native-base';
 import { Redirect, Link } from 'react-router-native';
 
@@ -23,7 +24,7 @@ export default class Login extends React.Component {
     shouldRedirect: false
   };
 
-  componentWillMount() {
+  componentDidMount() {
     firebaseInstance.auth().onAuthStateChanged(user => {
       if (user) {
         this.setState({ shouldRedirect: true });
@@ -47,12 +48,33 @@ export default class Login extends React.Component {
       .then(usr => {
         this.setState({ loading: false });
       })
-      .catch(function(error) {
+      .catch(error => {
         // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.warn(`Error: ${errorCode}: ${errorMessage}`);
-        this.setState({ loading: false });
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        if (errorCode === 'auth/invalid-email') {
+          Toast.show({
+            text: 'Correo inválido, intentalo de nuevo',
+            buttonText: 'OK',
+            type: 'danger',
+            duration: 6000
+          });
+        } else if (errorCode === 'auth/user-not-found') {
+          Toast.show({
+            text: 'No existe cuenta con este correo, registrate primero.',
+            buttonText: 'OK',
+            type: 'warning',
+            duration: 6000
+          });
+        } else if (errorCode === 'auth/wrong-password') {
+          Toast.show({
+            text: 'Contraseña incorrecta',
+            buttonText: 'OK',
+            type: 'danger',
+            duration: 6000
+          });
+        }
+        this.setState({ loading: false, email: '', password: '' });
       });
   };
   render() {
@@ -62,7 +84,7 @@ export default class Login extends React.Component {
     }
 
     return (
-      <Container style={{ paddingTop: 50 }}>
+      <Container style={styles.container}>
         <Content style={styles.content}>
           {loading ? (
             <Spinner />
@@ -74,6 +96,7 @@ export default class Login extends React.Component {
                   <Input
                     onChangeText={this.handleChange('email')}
                     value={email}
+                    keyboardType="email-address"
                   />
                 </Item>
                 <Item floatingLabel>
@@ -105,6 +128,7 @@ export default class Login extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: { paddingTop: 50 },
   content: { minWidth: 250, flexDirection: 'column' },
   loginButton: { alignSelf: 'center', padding: 50 },
   message: { flexDirection: 'row', justifyContent: 'center' }
