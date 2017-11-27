@@ -1,18 +1,16 @@
-import React, { Component } from "react"
-import { Redirect } from "react-router-native"
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-native';
 
-import firebaseInstance from "./firebase"
+import firebaseInstance from './firebase';
 
 export default class Authentication extends Component {
   render() {
-    const user = firebaseInstance.auth().currentUser
-    console.log("user!")
+    const user = firebaseInstance.auth().currentUser;
     if (user) {
-      console.log("redirecting to home")
-      return <Redirect to="/home" />
+      console.log('> user!', JSON.stringify(user));
+      return <Redirect to="/home" />;
     } else {
-      console.log("redirecting to login")
-      return <Redirect to="/login" />
+      return <Redirect to="/login" />;
     }
   }
 }
