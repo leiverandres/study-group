@@ -43,10 +43,10 @@ export default class App extends React.Component {
               <Root>
                 <Switch>
                   <Route exact path="/" component={Authentication} />
-                  <Route exact path="/login" component={Login} />
-                  <Route exact path="/logout" component={Logout} />
-                  <Route exact path="/signup" component={Signup} />
-                  <Route exact path="/home" component={Home} />
+                  <Route path="/login" component={Login} />
+                  <Route path="/logout" component={Logout} />
+                  <Route path="/signup" component={Signup} />
+                  <Route path="/home" component={Home} />
                   <Route path="/add-group" component={AddGroupScreen} />
                 </Switch>
               </Root>
