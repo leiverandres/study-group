@@ -17,7 +17,7 @@ import {
   Icon,
   Spinner
 } from 'native-base';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { Redirect } from 'react-router-native';
 
 import firebaseInstance from '../firebase';
@@ -28,6 +28,7 @@ export default class AddGroup extends Component {
     topic: '',
     place: '',
     description: '',
+    maxMembersQuantity: '',
     showToast: false,
     loading: false
   };
@@ -43,12 +44,14 @@ export default class AddGroup extends Component {
       groupName: '',
       topic: '',
       place: '',
-      description: ''
+      description: '',
+      maxMembersQuantity: ''
     });
   };
 
   handleCreate = () => {
     this.setState({ loading: true });
+    const user = firebaseInstance.auth().currentUser;
     const groupsRef = firebaseInstance
       .database()
       .ref()
@@ -58,7 +61,11 @@ export default class AddGroup extends Component {
           name: this.state.groupName,
           topic: this.state.topic,
           place: this.state.place,
-          description: this.state.description
+          description: this.state.description,
+          createdAt: Date.now(),
+          owner: user.uid,
+          maxMembersQuantity: this.state.maxMembersQuantity,
+          members: { [user.uid]: true }
         },
         err => {
           update = { loading: false };
@@ -88,6 +95,7 @@ export default class AddGroup extends Component {
       topic,
       place,
       description,
+      maxMembersQuantity,
       redirect,
       loading
     } = this.state;
@@ -115,44 +123,54 @@ export default class AddGroup extends Component {
           <Spinner />
         ) : (
           <Content>
-            <H1 style={styles.title}>Datos del nuevo grupo</H1>
-            <Form>
-              <Item floatingLabel>
-                <Label>Nombre del grupo</Label>
-                <Input
-                  onChangeText={this.handleChange('groupName')}
-                  value={groupName}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Area de conocimiento</Label>
-                <Input
-                  onChangeText={this.handleChange('topic')}
-                  value={topic}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Sitio de reuniones</Label>
-                <Input
-                  onChangeText={this.handleChange('place')}
-                  value={place}
-                />
-              </Item>
-              <Item floatingLabel>
-                <Label>Descripción</Label>
-                <Input
-                  onChangeText={this.handleChange('description')}
-                  value={description}
-                  multiline
-                  numberOfLines={4}
-                />
-              </Item>
-            </Form>
-            <View style={styles.button}>
-              <Button primary onPress={this.handleCreate}>
-                <Text>Crear</Text>
-              </Button>
-            </View>
+            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+              <H1 style={styles.title}>Datos del nuevo grupo</H1>
+              <Form>
+                <Item floatingLabel>
+                  <Label>Nombre del grupo</Label>
+                  <Input
+                    onChangeText={this.handleChange('groupName')}
+                    value={groupName}
+                  />
+                </Item>
+                <Item floatingLabel>
+                  <Label>Area de conocimiento</Label>
+                  <Input
+                    onChangeText={this.handleChange('topic')}
+                    value={topic}
+                  />
+                </Item>
+                <Item floatingLabel>
+                  <Label>Sitio de reuniones</Label>
+                  <Input
+                    onChangeText={this.handleChange('place')}
+                    value={place}
+                  />
+                </Item>
+                <Item floatingLabel>
+                  <Label>Descripción</Label>
+                  <Input
+                    onChangeText={this.handleChange('description')}
+                    value={description}
+                    multiline
+                    numberOfLines={4}
+                  />
+                </Item>
+                <Item floatingLabel>
+                  <Label>Limite de miembros</Label>
+                  <Input
+                    onChangeText={this.handleChange('maxMembersQuantity')}
+                    value={maxMembersQuantity}
+                    keyboardType="numeric"
+                  />
+                </Item>
+              </Form>
+              <View style={styles.button}>
+                <Button success onPress={this.handleCreate}>
+                  <Text>Crear</Text>
+                </Button>
+              </View>
+            </KeyboardAvoidingView>
           </Content>
         )}
       </Container>
@@ -166,5 +184,11 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     alignSelf: 'center',
     fontWeight: 'bold'
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 20
   }
 });

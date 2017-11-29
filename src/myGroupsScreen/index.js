@@ -1,91 +1,102 @@
-import React from "react";
-import {
-  Container,
-  List,
-  ListItem,
-  Card,
-  CardItem,
-  Text,
-  Body,
-  Button,
-  Icon
-} from "native-base";
-import { FlatList } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
-import { Link } from "react-router-native";
+import React from 'react';
+import { Container, Text, Button, H2, Icon } from 'native-base';
+import { FlatList, View } from 'react-native';
+import { Link } from 'react-router-native';
+import { StyleSheet } from 'react-native';
 
-const fakeGroupsList = [
-  {
-    key: 1,
-    name: "Matematicoss UTP",
-    subject: "Matematicas",
-    meetingPlace: "UTP",
-    description: "Reuniones para estudiar matematicas 1",
-    members: 10
-  },
-  {
-    key: 2,
-    name: "Lectura clasica",
-    subject: "Literatura",
-    meetingPlace: "Universidad Nacional",
-    description: "Estudio de literatura clasica",
-    members: 10
-  },
-  {
-    key: 3,
-    name: "Física UTP",
-    subject: "Física",
-    meetingPlace: "UTP",
-    description:
-      "Fisica cuantica cada martes y jueves de 4 a 6 pm, en la biblioteca ROA",
-    members: 10
-  }
-];
+import GroupCard from '../GroupCard';
+import firebaseInstance from '../firebase';
+
+const AddGroupButton = () => {
+  return (
+    <Button
+      bordered
+      iconRight
+      info
+      style={{ marginVertical: 20, alignSelf: 'center' }}
+    >
+      <Link to="/add-group">
+        <Text>Añadir grupo</Text>
+      </Link>
+      <Link to="/add-group">
+        <Icon ios="ios-add" android="md-add" name="md-add" />
+      </Link>
+    </Button>
+  );
+};
 
 export default class GroupsList extends React.Component {
   state = {
-    showAddButton: true
+    groups: []
   };
+
+  componentDidMount() {
+    const loggedUser = firebaseInstance.auth().currentUser;
+    firebaseInstance
+      .database()
+      .ref()
+      .child('groups/')
+      .once('value', snap => {
+        if (snap) {
+          const data = [{ key: 0 }];
+          snap.forEach((childSnap, idx) => {
+            const item = {
+              key: `explorer-${childSnap.key}`,
+              id: `id-explorer-${childSnap.key}`,
+              ...childSnap.val()
+            };
+            if (item.members[loggedUser.uid]) {
+              data.push(item);
+            }
+          });
+          this.setState({ groups: data });
+        }
+      });
+  }
+
   render() {
+    const { groups } = this.state;
     return (
       <Container>
-        {this.state.showAddButton && (
-          <Link to="/add-group">
-            <Button
-              bordered
-              iconRight
-              info
-              style={{ marginVertical: 20, alignSelf: "center" }}
-            >
-              <Text>Añadir grupo</Text>
-              <Icon ios="ios-add" android="md-add" name="md-add" />
-            </Button>
-          </Link>
+        {groups.length > 1 ? (
+          <FlatList
+            data={groups}
+            renderItem={({ item, index }) => {
+              if (index === 0) {
+                return <AddGroupButton />;
+              } else {
+                return <GroupCard {...item} />;
+              }
+            }}
+          />
+        ) : (
+          <View style={styles.messageContainer}>
+            <H2 style={styles.messageTitle}>No hay grupos</H2>
+            <Text style={styles.messageBody}>
+              No eres miembro de ningún grupo de estudio, ve a explorar y
+              encuentra un grupo para ti o inicia uno nuevo!
+            </Text>
+            <AddGroupButton />
+          </View>
         )}
-        <FlatList
-          onTouchStart={() => this.setState({ showAddButton: true })}
-          onScroll={() => this.setState({ showAddButton: false })}
-          data={fakeGroupsList}
-          renderItem={({ item }) => (
-            <Card style={{ marginHorizontal: 20 }}>
-              <CardItem header>
-                <Text>{item.name}</Text>
-              </CardItem>
-              <CardItem>
-                <Body>
-                  <Text>Tema: {item.subject}</Text>
-                  <Text>Lugar: {item.meetingPlace}</Text>
-                  <Text>{item.description}</Text>
-                </Body>
-              </CardItem>
-              <CardItem footer>
-                <FontAwesome name="group" />
-                <Text>{item.members}</Text>
-              </CardItem>
-            </Card>
-          )}
-        />
       </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  messageContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    flex: 2,
+    marginTop: 20
+  },
+  messageTitle: {
+    color: 'dimgray'
+  },
+  messageBody: {
+    color: 'dimgray',
+    marginHorizontal: 25,
+    textAlign: 'center'
+  }
+});
