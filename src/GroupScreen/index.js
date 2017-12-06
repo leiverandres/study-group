@@ -77,19 +77,19 @@ export default class GroupScreen extends Component {
 
   leaveUser = () => {
     console.warn('dejando el grupo');
-    const { loggedUser } = this.state;
-    const groupID = this.props.match.params.id;
-    firebaseInstance
-      .database()
-      .ref()
-      .child(`groups/${groupID}`)
-      .transaction(group => {
-        if (group) {
-          // delete group.members[loggedUser.uid];
-          // console.warn(group.members[loggedUser.uid]);
-        }
-        return group;
-      });
+    // const { loggedUser } = this.state;
+    // const groupID = this.props.match.params.id;
+    // firebaseInstance
+    //   .database()
+    //   .ref()
+    //   .child(`groups/${groupID}`)
+    //   .transaction(group => {
+    //     if (group) {
+    //       // delete group.members[loggedUser.uid];
+    //       // console.warn(group.members[loggedUser.uid]);
+    //     }
+    //     return group;
+    //   });
   };
   render() {
     const { data, loading, loggedUser } = this.state;
@@ -141,7 +141,7 @@ export default class GroupScreen extends Component {
                       flexDirection: 'column'
                     }}
                   >
-                    <Text style={{ fontWeight: 'bold' }}>Description</Text>
+                    <Text style={{ fontWeight: 'bold' }}>Descripción</Text>
                     <Text>{data.description}</Text>
                   </CardItem>
                 </Card>

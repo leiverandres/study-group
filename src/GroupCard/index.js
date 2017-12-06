@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Card, CardItem, Text, Body } from 'native-base';
+import { Card, CardItem, Text, Body, View, H2 } from 'native-base';
 import { FontAwesome } from '@expo/vector-icons';
 import { Link } from 'react-router-native';
+import { StyleSheet } from 'react-native';
 
 export default class GroupCard extends Component {
   render() {
@@ -15,25 +16,43 @@ export default class GroupCard extends Component {
     } = this.props;
 
     return (
-      <Card style={{ marginHorizontal: 50 }}>
+      <Card>
         <CardItem header>
-          <Text>{name}</Text>
+          <H2>{name}</H2>
         </CardItem>
         <CardItem>
           <Body>
-            <Text>Tema: {topic}</Text>
-            <Text>Lugar: {place}</Text>
+            <Text>
+              <Text style={{ fontWeight: 'bold' }}>Tema: </Text>
+              {topic}
+            </Text>
+            <Text>
+              <Text style={{ fontWeight: 'bold' }}>Lugar: </Text>
+              {place}
+            </Text>
             <Text>{description}</Text>
           </Body>
         </CardItem>
-        <CardItem footer>
-          <FontAwesome name="group" />
-          <Text>{maxMembersQuantity || 0}</Text>
+        <CardItem footer style={styles.footer}>
+          <View style={styles.usersIcons}>
+            <FontAwesome name="group" />
+            <Text>{maxMembersQuantity || 0}</Text>
+          </View>
           <Link to={`/group/${id}`}>
-            <Text>Ver</Text>
+            <Text>Ver grupo</Text>
           </Link>
         </CardItem>
       </Card>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  footer: {
+    justifyContent: 'space-around'
+  },
+  usersIcons: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
+});

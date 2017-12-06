@@ -38,6 +38,7 @@ export default class Explore extends Component {
     return (
       <Container>
         <FlatList
+          contentContainerStyle={{ margin: 15 }}
           data={groups}
           renderItem={({ item, index }) => {
             return <GroupCard {...item} />;

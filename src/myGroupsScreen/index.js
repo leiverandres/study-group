@@ -60,6 +60,7 @@ export default class GroupsList extends React.Component {
       <Container>
         {groups.length > 1 ? (
           <FlatList
+            contentContainerStyle={{ margin: 15 }}
             data={groups}
             renderItem={({ item, index }) => {
               if (index === 0) {
