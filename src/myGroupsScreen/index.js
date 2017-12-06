@@ -41,8 +41,8 @@ export default class GroupsList extends React.Component {
           const data = [{ key: 0 }];
           snap.forEach((childSnap, idx) => {
             const item = {
-              key: `explorer-${childSnap.key}`,
-              id: `id-explorer-${childSnap.key}`,
+              key: childSnap.key,
+              id: childSnap.key,
               ...childSnap.val()
             };
             if (item.members[loggedUser.uid]) {

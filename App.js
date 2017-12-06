@@ -18,6 +18,7 @@ import Logout from './src/logout';
 import Signup from './src/signupScreen';
 import Home from './src/home';
 import AddGroupScreen from './src/addGroupScreen';
+import GroupScrean from './src/GroupScreen';
 
 export default class App extends React.Component {
   state = {
@@ -48,6 +49,7 @@ export default class App extends React.Component {
                   <Route exact path="/signup" component={Signup} />
                   <Route exact path="/home" component={Home} />
                   <Route exact path="/add-group" component={AddGroupScreen} />
+                  <Route path="/group/:id" component={GroupScrean} />
                 </Switch>
               </Root>
             </View>

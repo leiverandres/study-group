@@ -21,8 +21,8 @@ export default class Explore extends Component {
           const data = [];
           snap.forEach((childSnap, idx) => {
             const item = {
-              key: `myGroups-${childSnap.key}`,
-              id: `myGroups-${childSnap.key}`,
+              key: childSnap.key,
+              id: childSnap.key,
               ...childSnap.val()
             };
             if (!item.members[loggedUser.uid]) {
