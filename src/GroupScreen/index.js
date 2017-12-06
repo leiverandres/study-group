@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import {
   Container,
   Header,
-  Left,
-  Right,
   Body,
   Title,
   Content,
@@ -14,16 +12,32 @@ import {
   Text,
   View,
   Button,
-  Toast
+  Toast,
+  Tabs,
+  Tab,
+  Grid,
+  Row,
+  Form,
+  Item,
+  Input,
+  Icon
 } from 'native-base';
+import { KeyboardAvoidingView, FlatList } from 'react-native';
 
 import firebaseInstance from '../firebase';
 import GroupCard from '../GroupCard/index';
+import ChatView from './ChatView';
+
+const ORIENTATION = {
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT'
+};
 
 export default class GroupScreen extends Component {
   state = {
     loading: true,
-    data: {}
+    data: {},
+    loggedUser: {}
   };
 
   componentDidMount() {
@@ -101,15 +115,17 @@ export default class GroupScreen extends Component {
       isThereRoom = currentMembers < max;
     }
     return (
-      <Container>
-        <Header>
-          <Left />
-          <Body>
-            <Title>{(!isDataEmpty && data.name) || ''}</Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content padder>
+      <KeyboardAvoidingView
+        behavior="padding"
+        keyboardVerticalOffset={30}
+        style={{ flex: 1 }}
+      >
+        <Container>
+          <Header hasTabs>
+            <Body>
+              <Title>{(!isDataEmpty && data.name) || ''}</Title>
+            </Body>
+          </Header>
           {loading ? (
             <Spinner
               size="large"
@@ -119,59 +135,63 @@ export default class GroupScreen extends Component {
               }}
             />
           ) : (
-            <View
-              style={{
-                height: 480
-              }}
-            >
-              <View style={{ flex: 2 }}>
-                <Card>
-                  <CardItem>
-                    <Text style={{ fontWeight: 'bold' }}>Materia:</Text>
-                    <Text>{data.topic}</Text>
-                  </CardItem>
-                  <CardItem>
-                    <Text style={{ fontWeight: 'bold' }}>Reuniones:</Text>
-                    <Text>{data.place}</Text>
-                  </CardItem>
-                </Card>
-                <Card style={{ alignItems: 'flex-start' }}>
-                  <CardItem
-                    style={{
-                      flexDirection: 'column'
-                    }}
-                  >
-                    <Text style={{ fontWeight: 'bold' }}>Descripción</Text>
-                    <Text>{data.description}</Text>
-                  </CardItem>
-                </Card>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end'
-                }}
-              >
-                {!data.members[loggedUser.uid] && (
-                  <Button
-                    full
-                    disabled={!isThereRoom}
-                    success={isThereRoom}
-                    style={{ bottom: 0 }}
-                  >
-                    <Text onPress={this.joinUser}>Unirse</Text>
-                  </Button>
-                )}
-                {data.members[loggedUser.uid] && (
-                  <Button full danger style={{}}>
-                    <Text onPress={this.leaveUser}>Salir del grupo</Text>
-                  </Button>
-                )}
-              </View>
-            </View>
+            <Tabs>
+              <Tab heading="Info">
+                <View style={{ flex: 2 }}>
+                  <Card>
+                    <CardItem>
+                      <Text style={{ fontWeight: 'bold' }}>Materia:</Text>
+                      <Text>{data.topic}</Text>
+                    </CardItem>
+                    <CardItem>
+                      <Text style={{ fontWeight: 'bold' }}>Reuniones:</Text>
+                      <Text>{data.place}</Text>
+                    </CardItem>
+                  </Card>
+                  <Card style={{ alignItems: 'flex-start' }}>
+                    <CardItem
+                      style={{
+                        flexDirection: 'column'
+                      }}
+                    >
+                      <Text style={{ fontWeight: 'bold' }}>Descripción</Text>
+                      <Text>{data.description}</Text>
+                    </CardItem>
+                  </Card>
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'flex-end'
+                  }}
+                >
+                  {!data.members[loggedUser.uid] && (
+                    <Button
+                      full
+                      disabled={!isThereRoom}
+                      success={isThereRoom}
+                      style={{ bottom: 0 }}
+                    >
+                      <Text onPress={this.joinUser}>Unirse</Text>
+                    </Button>
+                  )}
+                  {data.members[loggedUser.uid] && (
+                    <Button full danger style={{}}>
+                      <Text onPress={this.leaveUser}>Salir del grupo</Text>
+                    </Button>
+                  )}
+                </View>
+              </Tab>
+              <Tab heading="Chat">
+                <ChatView
+                  currentUser={this.state.loggedUser}
+                  currentGroup={this.props.match.params.id}
+                />
+              </Tab>
+            </Tabs>
           )}
-        </Content>
-      </Container>
+        </Container>
+      </KeyboardAvoidingView>
     );
   }
 }
