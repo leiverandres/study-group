@@ -56,6 +56,7 @@ export default class GroupScreen extends Component {
   }
 
   joinUser = () => {
+    this.setState({ loading: true });
     const { loggedUser } = this.state;
     const groupID = this.props.match.params.id;
     firebaseInstance
@@ -85,25 +86,45 @@ export default class GroupScreen extends Component {
               duration: 3000
             });
           }
+          this.setState({ loading: false });
         }
       );
   };
 
   leaveUser = () => {
-    console.warn('dejando el grupo');
-    // const { loggedUser } = this.state;
-    // const groupID = this.props.match.params.id;
-    // firebaseInstance
-    //   .database()
-    //   .ref()
-    //   .child(`groups/${groupID}`)
-    //   .transaction(group => {
-    //     if (group) {
-    //       // delete group.members[loggedUser.uid];
-    //       // console.warn(group.members[loggedUser.uid]);
-    //     }
-    //     return group;
-    //   });
+    this.setState({ loading: true });
+    const { loggedUser } = this.state;
+    const groupID = this.props.match.params.id;
+    firebaseInstance
+      .database()
+      .ref()
+      .child(`groups/${groupID}`)
+      .transaction(
+        group => {
+          if (group) {
+            group.members[loggedUser.uid] = false;
+          }
+          return group;
+        },
+        err => {
+          if (err) {
+            Toast.show({
+              text: 'Problemas saliendo de este grupo :(',
+              type: 'danger',
+              position: 'bottom',
+              duration: 3000
+            });
+          } else {
+            Toast.show({
+              text: 'Has salido del grupo exitosamente',
+              type: 'success',
+              position: 'bottom',
+              duration: 3000
+            });
+          }
+          this.setState({ loading: false });
+        }
+      );
   };
   render() {
     const { data, loading, loggedUser } = this.state;
@@ -183,10 +204,21 @@ export default class GroupScreen extends Component {
                 </View>
               </Tab>
               <Tab heading="Chat">
-                <ChatView
-                  currentUser={this.state.loggedUser}
-                  currentGroup={this.props.match.params.id}
-                />
+                {data.members[loggedUser.uid] ? (
+                  <ChatView
+                    currentUser={this.state.loggedUser}
+                    currentGroup={this.props.match.params.id}
+                  />
+                ) : (
+                  <Card>
+                    <CardItem style={{ flexDirection: 'column' }}>
+                      <Text style={{ fontWeight: 'bold' }}>
+                        No puedes acceder a esta infomación
+                      </Text>
+                      <Icon name="md-sad" style={{ fontSize: 30 }} />
+                    </CardItem>
+                  </Card>
+                )}
               </Tab>
             </Tabs>
           )}
