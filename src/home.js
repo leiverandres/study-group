@@ -10,7 +10,7 @@ import {
   Drawer,
   Icon
 } from 'native-base';
-import { Route } from 'react-router-native';
+import { Route, Link } from 'react-router-native';
 
 import SideBar from './sidebar';
 import MyGroups from './myGroupsScreen';
@@ -45,13 +45,14 @@ export default class Home extends Component {
               />
             </Left>
             <Right>
-              <Icon
-                active
-                ios="ios-search"
-                android="md-search"
-                style={{ fontSize: 35, width: 30 }}
-                onPress={() => console.warn('Search box should be open')}
-              />
+              <Link to="/search-group">
+                <Icon
+                  active
+                  ios="ios-search"
+                  android="md-search"
+                  style={{ fontSize: 35, width: 30 }}
+                />
+              </Link>
             </Right>
           </Header>
           <Tabs initialPage={0}>

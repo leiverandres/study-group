@@ -22,6 +22,7 @@
     "@expo/vector-icons": "^6.1.0",
     "expo": "23.x.x",
     "firebase": "^4.6.1",
+    "fuse.js": "^3.2.0",
     "native-base": "^2.3.3",
     "prop-types": "^15.6.0",
     "react": "16.0.0",
