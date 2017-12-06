@@ -50,7 +50,7 @@ export default class Signup extends Component {
         // Successfully created
         newUser
           .updateProfile({
-            name: username
+            displayName: username
           })
           .then(() => this.setState({ loading: false }))
           .catch(err => {

@@ -65,7 +65,8 @@ export default class AddGroup extends Component {
           createdAt: Date.now(),
           owner: user.uid,
           maxMembersQuantity: this.state.maxMembersQuantity,
-          members: { [user.uid]: true }
+          members: { [user.uid]: true },
+          messages: {}
         },
         err => {
           update = { loading: false };
@@ -88,6 +89,16 @@ export default class AddGroup extends Component {
           this.setState(update);
         }
       );
+    const initialMsg = groupsRef.child('messages').push();
+    initialMsg.set({
+      key: initialMsg.key,
+      text: `Bienvenido al grupo ${this.state.groupName}`,
+      createdAt: new Date(),
+      user: {
+        id: user.uid,
+        name: 'A man'
+      }
+    });
   };
   render() {
     const {

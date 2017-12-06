@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Text, Button, H2, Icon } from 'native-base';
+import { Container, Content, Text, Button, H2, Icon } from 'native-base';
 import { FlatList, View } from 'react-native';
 import { Link } from 'react-router-native';
 import { StyleSheet } from 'react-native';
@@ -58,28 +58,30 @@ export default class GroupsList extends React.Component {
     const { groups } = this.state;
     return (
       <Container>
-        {groups.length > 1 ? (
-          <FlatList
-            contentContainerStyle={{ margin: 15 }}
-            data={groups}
-            renderItem={({ item, index }) => {
-              if (index === 0) {
-                return <AddGroupButton />;
-              } else {
-                return <GroupCard {...item} />;
-              }
-            }}
-          />
-        ) : (
-          <View style={styles.messageContainer}>
-            <H2 style={styles.messageTitle}>No hay grupos</H2>
-            <Text style={styles.messageBody}>
-              No eres miembro de ningún grupo de estudio, ve a explorar y
-              encuentra un grupo para ti o inicia uno nuevo!
-            </Text>
-            <AddGroupButton />
-          </View>
-        )}
+        <Content>
+          {groups.length > 1 ? (
+            <FlatList
+              contentContainerStyle={{ margin: 15 }}
+              data={groups}
+              renderItem={({ item, index }) => {
+                if (index === 0) {
+                  return <AddGroupButton />;
+                } else {
+                  return <GroupCard {...item} />;
+                }
+              }}
+            />
+          ) : (
+            <View style={styles.messageContainer}>
+              <H2 style={styles.messageTitle}>No hay grupos</H2>
+              <Text style={styles.messageBody}>
+                No eres miembro de ningún grupo de estudio, ve a explorar y
+                encuentra un grupo para ti o inicia uno nuevo!
+              </Text>
+              <AddGroupButton />
+            </View>
+          )}
+        </Content>
       </Container>
     );
   }
