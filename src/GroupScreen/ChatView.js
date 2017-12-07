@@ -32,11 +32,13 @@ const Message = props => {
           marginLeft: 10,
           paddingHorizontal: 10,
           paddingVertical: 5,
-          flexDirection: 'row',
           flex: 1,
           ...bubbleStyle
         }}
       >
+        {props.orientation === ORIENTATION.LEFT && (
+          <Text style={{ fontWeight: 'bold' }}>{props.user.name}</Text>
+        )}
         <Text style={{ color: '#000' }}>{props.text}</Text>
       </View>
       {rightSpacer}
