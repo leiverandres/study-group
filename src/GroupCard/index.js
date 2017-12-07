@@ -12,9 +12,14 @@ export default class GroupCard extends Component {
       place,
       description,
       maxMembersQuantity,
-      id
+      id,
+      members
     } = this.props;
-
+    const activeMembers = Object.values(members).reduce((acum, cur) => {
+      if (cur) {
+        return acum + 1;
+      }
+    }, 0);
     return (
       <Card>
         <CardItem header>
@@ -35,8 +40,15 @@ export default class GroupCard extends Component {
         </CardItem>
         <CardItem footer style={styles.footer}>
           <View style={styles.usersIcons}>
-            <FontAwesome name="group" />
-            <Text>{maxMembersQuantity || 0}</Text>
+            <FontAwesome
+              name="group"
+              style={{
+                color: `${
+                  activeMembers < maxMembersQuantity ? '#4caf50' : '#ff5722'
+                }`
+              }}
+            />
+            <Text>{`${activeMembers} de ${maxMembersQuantity || 0}`}</Text>
           </View>
           <Link to={`/group/${id}`}>
             <Text>Ver grupo</Text>
