@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import {
   Form,
   Input,
@@ -13,6 +13,7 @@ import {
   Toast
 } from 'native-base';
 import { Link, Redirect } from 'react-router-native';
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import firebaseInstance from '../firebase';
 
@@ -65,6 +66,7 @@ export default class Signup extends Component {
       .catch(error => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        let update = { loading: false };
         if (errorCode === 'auth/email-already-in-use') {
           Toast.show({
             text: 'Este correo ya se encuentra registrado',
@@ -72,6 +74,8 @@ export default class Signup extends Component {
             type: 'danger',
             duration: 5000
           });
+          update.email = '';
+          update.password = '';
         } else if (errorCode === 'auth/invalid-email') {
           Toast.show({
             text: 'Correo inválido, intentalo de nuevo',
@@ -79,6 +83,7 @@ export default class Signup extends Component {
             type: 'warning',
             duration: 5000
           });
+          update.email = '';
         } else if (errorCode === 'auth/weak-password') {
           Toast.show({
             text:
@@ -86,8 +91,9 @@ export default class Signup extends Component {
             buttonText: 'Ok',
             type: 'warning'
           });
+          update.password = '';
         }
-        this.setState({ loading: false, email: '', password: '' });
+        this.setState(update);
       });
   };
 
@@ -103,7 +109,7 @@ export default class Signup extends Component {
           {loading ? (
             <Spinner style={styles.spinner} />
           ) : (
-            <View>
+            <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={0}>
               <Form>
                 <Item floatingLabel>
                   <Label>Username</Label>
@@ -140,7 +146,7 @@ export default class Signup extends Component {
                   <Text style={{ color: 'teal' }}> Inicia sesión!</Text>
                 </Link>
               </View>
-            </View>
+            </KeyboardAvoidingView>
           )}
         </Content>
       </Container>
