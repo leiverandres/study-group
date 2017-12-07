@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardItem, Text, Body, View, H2 } from 'native-base';
+import { Card, CardItem, Text, Body, View, H2, Button } from 'native-base';
 import { FontAwesome } from '@expo/vector-icons';
 import { Link } from 'react-router-native';
 import { StyleSheet } from 'react-native';
@@ -51,7 +51,9 @@ export default class GroupCard extends Component {
             <Text>{`${activeMembers} de ${maxMembersQuantity || 0}`}</Text>
           </View>
           <Link to={`/group/${id}`}>
-            <Text>Ver grupo</Text>
+            <Text style={{ color: '#42a5f5', fontWeight: 'bold' }}>
+              Ver grupo
+            </Text>
           </Link>
         </CardItem>
       </Card>
