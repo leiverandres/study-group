@@ -131,10 +131,12 @@ export default class GroupScreen extends Component {
     const { data, loading, loggedUser } = this.state;
     const isDataEmpty = Object.keys(data).length === 0;
     let isThereRoom = false;
+    let isOwner = false;
     if (!isDataEmpty) {
       const max = data.maxMembersQuantity;
       const currentMembers = Object.keys(data.members).length;
       isThereRoom = currentMembers < max;
+      isOwner = loggedUser.uid === data.owner;
     }
     return (
       <Container>
@@ -208,7 +210,7 @@ export default class GroupScreen extends Component {
                     </Button>
                   )}
                   {data.members[loggedUser.uid] && (
-                    <Button full danger style={{}}>
+                    <Button full danger={!isOwner} disabled={isOwner}>
                       <Text onPress={this.leaveUser}>Salir del grupo</Text>
                     </Button>
                   )}
