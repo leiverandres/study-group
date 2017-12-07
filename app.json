@@ -7,11 +7,10 @@
     "icon": "./logo_with_name.png",
     "loading": {
       "icon": "./logo.png"
+    },
+    "android": {
+      "package": "com.studygroup.apps",
+      "icon": "./logo_with_name.png"
     }
-  },
-  "android": {
-    "package": "study-group",
-    "versionCode": 5,
-    "icon": "./logo_with_name.png"
   }
 }
