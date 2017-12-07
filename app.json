@@ -3,10 +3,15 @@
     "sdkVersion": "23.0.0",
     "name": "study group",
     "slug": "study-group",
-    "description": "find the best study group around you"
+    "description": "find the best study group around you",
+    "icon": "./logo_with_name.png",
+    "loading": {
+      "icon": "./logo.png"
+    }
   },
   "android": {
     "package": "study-group",
-    "versionCode": 5
+    "versionCode": 5,
+    "icon": "./logo_with_name.png"
   }
 }
