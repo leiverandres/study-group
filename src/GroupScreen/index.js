@@ -3,6 +3,7 @@ import {
   Container,
   Header,
   Body,
+  Left,
   Title,
   Content,
   H1,
@@ -136,14 +137,24 @@ export default class GroupScreen extends Component {
       isThereRoom = currentMembers < max;
     }
     return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={30}
-        style={{ flex: 1 }}
-      >
-        <Container>
+      <Container>
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={25}
+          behavior="padding"
+          style={{ flex: 1 }}
+        >
           <Header hasTabs>
-            <Body>
+            <Left style={{ flex: 1 }}>
+              <Icon
+                style={{ 'align-self': 'flex-start', backgroundColor: '#fff' }}
+                active
+                ios="md-arrow-round-back"
+                android="md-arrow-round-back"
+                style={{ fontSize: 30, width: 30 }}
+                onPress={() => this.props.history.goBack()}
+              />
+            </Left>
+            <Body style={{ flex: 4 }}>
               <Title>{(!isDataEmpty && data.name) || ''}</Title>
             </Body>
           </Header>
@@ -222,8 +233,8 @@ export default class GroupScreen extends Component {
               </Tab>
             </Tabs>
           )}
-        </Container>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </Container>
     );
   }
 }

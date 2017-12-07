@@ -43,7 +43,6 @@ export default class SearchScreen extends Component {
 
             data.push(item);
           });
-          console.warn(data);
           this.setState({ groups: data, loading: false });
           this.fuse = new Fuse(data, {
             keys: ['place', 'topic', 'name']

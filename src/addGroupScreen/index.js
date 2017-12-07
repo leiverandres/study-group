@@ -134,7 +134,11 @@ export default class AddGroup extends Component {
           <Spinner />
         ) : (
           <Content>
-            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+            <KeyboardAvoidingView
+              behavior="padding"
+              keyboardVerticalOffset={0}
+              style={styles.container}
+            >
               <H1 style={styles.title}>Datos del nuevo grupo</H1>
               <Form>
                 <Item floatingLabel>

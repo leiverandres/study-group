@@ -1,34 +1,32 @@
-import React, { Component } from "react"
-import { Redirect } from "react-router-native"
-import { Spinner, Container, Content } from "native-base"
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-native';
+import { Spinner, Container, Content } from 'native-base';
 
-import firebaseInstance from "./firebase"
+import firebaseInstance from './firebase';
 
 export default class Logout extends Component {
   state = {
     redirect: false
-  }
+  };
 
   componentWillMount() {
     firebaseInstance
       .auth()
       .signOut()
       .then(
-      () => {
-        this.setState({ redirect: true })
-      },
-      err => {
-        this.setState({ redirect: true })
-        console.warn("Error loging out user")
-      }
-      )
+        () => {
+          this.setState({ redirect: true });
+        },
+        err => {
+          this.setState({ redirect: true });
+        }
+      );
   }
 
   render() {
-    const { redirect } = this.state
+    const { redirect } = this.state;
     if (redirect) {
-      return <Redirect to="/" />
-
+      return <Redirect to="/" />;
     } else {
       return (
         <Container>
@@ -36,7 +34,7 @@ export default class Logout extends Component {
             <Spinner />
           </Content>
         </Container>
-      )
+      );
     }
   }
 }

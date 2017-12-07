@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, Button, Row, Item, Input, Icon } from 'native-base';
-import { FlatList } from 'react-native';
+import { FlatList, KeyboardAvoidingView } from 'react-native';
 
 import firebaseInstance from '../firebase';
 
@@ -44,14 +44,30 @@ const Message = props => {
   );
 };
 
-const MessageList = ({ messages }) => {
-  return (
-    <FlatList
-      data={messages}
-      renderItem={({ item }) => <Message {...item} />}
-    />
-  );
-};
+class MessageList extends Component {
+  componentDidMount() {
+    setTimeout(() => {
+      this.listComponent.scrollToEnd({ animated: true });
+    }, 500);
+  }
+
+  componentDidUpdate() {
+    setTimeout(() => {
+      this.listComponent.scrollToEnd({ animated: true });
+    }, 500);
+  }
+  render() {
+    const { messages } = this.props;
+    return (
+      <FlatList
+        ref={listComponent => (this.listComponent = listComponent)}
+        data={messages}
+        onLayout={() => this.listComponent.scrollToEnd({ animated: true })}
+        renderItem={({ item }) => <Message {...item} />}
+      />
+    );
+  }
+}
 export default class ChatView extends Component {
   state = {
     messageText: '',
@@ -78,23 +94,25 @@ export default class ChatView extends Component {
   }
 
   onSend = () => {
-    const currentGroup = this.props.currentGroup;
-    const message = {
-      text: this.state.messageText,
-      createdAt: new Date(),
-      user: {
-        id: this.props.currentUser.uid,
-        name: this.props.currentUser.displayName
-      }
-    };
-    const newMsg = firebaseInstance
-      .database()
-      .ref()
-      .child(`groups/${currentGroup}/messages`)
-      .push();
-    message.key = newMsg.key;
-    newMsg.set(message);
-    this.setState({ messageText: '' });
+    if (this.state.messageText.length > 0) {
+      const currentGroup = this.props.currentGroup;
+      const message = {
+        text: this.state.messageText,
+        createdAt: new Date(),
+        user: {
+          id: this.props.currentUser.uid,
+          name: this.props.currentUser.displayName
+        }
+      };
+      const newMsg = firebaseInstance
+        .database()
+        .ref()
+        .child(`groups/${currentGroup}/messages`)
+        .push();
+      message.key = newMsg.key;
+      newMsg.set(message);
+      this.setState({ messageText: '' });
+    }
   };
   render() {
     const { messages } = this.state;
@@ -112,7 +130,7 @@ export default class ChatView extends Component {
         <Row size={4}>
           <MessageList messages={messagesList} />
         </Row>
-        <Row style={{}} size={1}>
+        <Row size={1}>
           <View
             style={{
               flex: 1,
@@ -121,7 +139,10 @@ export default class ChatView extends Component {
               flexDirection: 'row'
             }}
           >
-            <Item rounded style={{ alignSelf: 'center', flex: 6 }}>
+            <Item
+              rounded
+              style={{ alignSelf: 'center', flex: 6, backgroundColor: '#fff' }}
+            >
               <Input
                 placeholder="Escribe un mensaje..."
                 onChangeText={this.handleChange}
